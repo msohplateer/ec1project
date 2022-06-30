@@ -1,8 +1,9 @@
-package com.plateer.ec1.promotion.vo;
+package com.plateer.ec1.promotion.vo.base;
+
+import com.plateer.ec1.promotion.vo.common.Product;
+import lombok.Data;
 
 import java.util.List;
-
-import lombok.Data;
 
 @Data
 public class PromotionRequestVo {

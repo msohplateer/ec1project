@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper
+3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plateer.ec1.promotion.mapper.CouponInfoMapper">
+    <sql id="sql_couponInfo">
+        with coupon_info as(
+                        select cpb.prm_no
+                             , cpb.prm_nm
+                             , cpb.prm_priod_ccd
+                             , cpb.prm_strt_dt
+                             , cpb.prm_end_dt
+                             , cpb.prm_std_dd
+                             , to_date(ccb.dwl_avl_strt_dd, 'YYYYMMDD') as dwl_avl_strt_dd
+                             , to_date(ccb.dwl_avl_end_dd, 'YYYYMMDD') as dwl_avl_end_dd
+                             , ccb.dwl_psb_cnt
+                             , ccb.psn_dwl_psb_cnt
+                          from cc_prm_base cpb
+                         inner join cc_cpn_base ccb
+                            on cpb.prm_no = ccb.prm_no
+                         where cpb.use_yn = 'Y'
+                           and now() between ccb.dwl_avl_strt_dd::date and ccb.dwl_avl_end_dd::date + 1
+        )
+    </sql>
+
+    <select id="getAvailableCoupon" parameterType="com.plateer.ec1.promotion.vo.coupon.CouponRequestVo" resultType="com.plateer.ec1.promotion.vo.coupon.Coupon">
+        <include refid="sql_couponInfo" />
+        select ci.*
+             , (select count(*) from cc_cpn_issue where prm_no = #{prmNo}) as dwl_cpt_cnt
+             , (select count(*) from cc_cpn_issue where prm_no = #{prmNo} and mbr_no = #{mbrNo}) as psn_dwl_cpt_cnt
+          from coupon_info ci
+         where prm_no = #{prmNo}
+    </select>
+
+    <select id="getCancelCouponInfo" parameterType="com.plateer.ec1.promotion.vo.coupon.CouponRequestVo" resultType="com.plateer.ec1.promotion.vo.coupon.Coupon">
+        <include refid="sql_couponInfo" />
+        select case when ci.prm_priod_ccd = "20" then cci.sys_mod_dtime + ci.prm_std_dd * interval '1 day'
+                    else ci.prm_end_dt end as prm_end_dt
+          from coupon_info ci
+         inner join cc_cpn_issue cci
+            on ci.prm_no = cci.prm_no
+         where cci.cpn_iss_no = #{cpnIssNo}
+    </select>
+</mapper>

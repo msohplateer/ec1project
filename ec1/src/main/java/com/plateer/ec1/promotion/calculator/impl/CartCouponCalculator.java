@@ -1,19 +1,17 @@
 package com.plateer.ec1.promotion.calculator.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.plateer.ec1.promotion.calculator.Calculator;
 import com.plateer.ec1.promotion.enums.PromotionType;
-import com.plateer.ec1.promotion.vo.BaseResponseVo;
-import com.plateer.ec1.promotion.vo.CartCouponResponseVo;
-import com.plateer.ec1.promotion.vo.CouponProductsVo;
-import com.plateer.ec1.promotion.vo.Promotion;
-import com.plateer.ec1.promotion.vo.PromotionRequestVo;
-
+import com.plateer.ec1.promotion.vo.coupon.Coupon;
+import com.plateer.ec1.promotion.vo.base.PromotionRequestVo;
+import com.plateer.ec1.promotion.vo.base.BaseResponseVo;
+import com.plateer.ec1.promotion.vo.coupon.CartCouponResponseVo;
+import com.plateer.ec1.promotion.vo.coupon.CouponProductsVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -24,25 +22,21 @@ public class CartCouponCalculator implements Calculator{
 		return PromotionType.CART_CUP;
 	}
 
-	private Promotion getAvailablePromotionData(PromotionRequestVo prVo) {
+	private Coupon getAvailablePromotionData(PromotionRequestVo prVo) {
 		log.info("적용 가능 장바구니 쿠폰 데이터 조회");
+
+		Coupon coupon = new Coupon();
 		
-		Promotion promotion = new Promotion();
-		
-		promotion.setCouponIssueNo(100L);
-		promotion.setDcAmt(1000L);
-		promotion.setPromotionNo(1L);
-		
-		return new Promotion();
+		return new Coupon();
 	}
 
-	private CartCouponResponseVo calculateDcAmt(PromotionRequestVo prVo, Promotion prm) {
+	private CartCouponResponseVo calculateDcAmt(PromotionRequestVo prVo, Coupon cpn) {
 		log.info("장바구니 쿠폰 할인 적용 금액 계산");
 		CouponProductsVo cpVo = new CouponProductsVo();
 		List couponList = new ArrayList();
 		
 		cpVo.setProductList(prVo.getProductList());
-		cpVo.setPromotion(prm);
+		cpVo.setCoupon(cpn);
 		
 		CartCouponResponseVo ccrVo = new CartCouponResponseVo();
 		List couponProductsList = new ArrayList();
@@ -63,8 +57,8 @@ public class CartCouponCalculator implements Calculator{
 	@Override
 	public BaseResponseVo getCalculationData(PromotionRequestVo prVo) {
 		log.info("CartCouponCalculation getCalculationData call");
-		Promotion promotion = getAvailablePromotionData(prVo);
-		CartCouponResponseVo vo = calculateDcAmt(prVo, promotion);
+		Coupon coupon = getAvailablePromotionData(prVo);
+		CartCouponResponseVo vo = calculateDcAmt(prVo, coupon);
 		CartCouponResponseVo resVo = calculateMaxBenefit(vo);
 		return resVo;
 	}

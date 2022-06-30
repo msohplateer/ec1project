@@ -1,19 +1,17 @@
 package com.plateer.ec1.promotion.calculator.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.plateer.ec1.promotion.calculator.Calculator;
 import com.plateer.ec1.promotion.enums.PromotionType;
-import com.plateer.ec1.promotion.vo.BaseResponseVo;
-import com.plateer.ec1.promotion.vo.ProductCouponResponseVo;
-import com.plateer.ec1.promotion.vo.ProductCouponsVo;
-import com.plateer.ec1.promotion.vo.Promotion;
-import com.plateer.ec1.promotion.vo.PromotionRequestVo;
-
+import com.plateer.ec1.promotion.vo.base.PromotionRequestVo;
+import com.plateer.ec1.promotion.vo.base.BaseResponseVo;
+import com.plateer.ec1.promotion.vo.coupon.Coupon;
+import com.plateer.ec1.promotion.vo.coupon.ProductCouponResponseVo;
+import com.plateer.ec1.promotion.vo.coupon.ProductCouponsVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -24,24 +22,19 @@ public class ProductCouponCalculator implements Calculator{
 		return PromotionType.PRD_CUP;
 	}
 		
-	private Promotion getAvailablePromotionData(PromotionRequestVo prVo) {
+	private Coupon getAvailablePromotionData(PromotionRequestVo prVo) {
 		log.info("적용 가능 상품 쿠폰 데이터 조회");
 		
-		Promotion promotion = new Promotion();
-		
-		promotion.setCouponIssueNo(100L);
-		promotion.setDcAmt(1000L);
-		promotion.setPromotionNo(1L);
-		
-		return promotion;
+
+		return null;
 	}
 
-	private ProductCouponResponseVo calculateDcAmt(PromotionRequestVo prVo, Promotion prm) {
+	private ProductCouponResponseVo calculateDcAmt(PromotionRequestVo prVo, Coupon cpn) {
 		log.info("상품 쿠폰 할인 적용 금액 계산");
 		ProductCouponsVo pcVo = new ProductCouponsVo();
 		List promotionList = new ArrayList();
 		
-		promotionList.add(prm);
+		promotionList.add(cpn);
 		pcVo.setProduct(prVo.getProductList().get(0));
 		pcVo.setPromotionList(promotionList);
 		
@@ -64,8 +57,8 @@ public class ProductCouponCalculator implements Calculator{
 	@Override
 	public BaseResponseVo getCalculationData(PromotionRequestVo prVo) {
 		log.info("PriceDiscountCalculation getCalculationData call");
-		Promotion promotion = getAvailablePromotionData(prVo);
-		ProductCouponResponseVo vo = calculateDcAmt(prVo, promotion);
+		Coupon coupon = getAvailablePromotionData(prVo);
+		ProductCouponResponseVo vo = calculateDcAmt(prVo, coupon);
 		ProductCouponResponseVo resVo = calculateMaxBenefit(vo);
 		return resVo;
 	}

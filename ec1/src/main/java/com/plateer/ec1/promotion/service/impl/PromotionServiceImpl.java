@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import com.plateer.ec1.promotion.enums.PromotionType;
 import com.plateer.ec1.promotion.factory.CalculatorFactory;
 import com.plateer.ec1.promotion.service.PromotionService;
-import com.plateer.ec1.promotion.vo.CartCouponResponseVo;
-import com.plateer.ec1.promotion.vo.PriceDiscountResponseVo;
-import com.plateer.ec1.promotion.vo.ProductCouponResponseVo;
-import com.plateer.ec1.promotion.vo.PromotionRequestVo;
+import com.plateer.ec1.promotion.vo.coupon.CartCouponResponseVo;
+import com.plateer.ec1.promotion.vo.pricediscount.PriceDiscountResponseVo;
+import com.plateer.ec1.promotion.vo.coupon.ProductCouponResponseVo;
+import com.plateer.ec1.promotion.vo.base.PromotionRequestVo;
 
 import lombok.RequiredArgsConstructor;
 
