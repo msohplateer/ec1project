@@ -62,7 +62,6 @@ public class ProductCouponCalculator implements Calculator{
 		Set<Long> maxBnfSet = new HashSet<>();
 		for(ProductCouponsVo vo:pcbList){
 			List<CouponApplyInfo> applyInfoList = vo.getCouponApplyInfoList();
-			log.info("applyInfoList data : " + applyInfoList.toString());
 			CouponApplyInfo maxPrm = getMaxPrm(applyInfoList, maxBnfSet);
 			if(maxPrm != null) {
 				maxBnfSet.add(maxPrm.getCpnIssNo());

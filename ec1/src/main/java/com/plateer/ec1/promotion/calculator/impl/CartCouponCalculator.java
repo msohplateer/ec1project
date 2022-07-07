@@ -33,7 +33,6 @@ public class CartCouponCalculator implements Calculator{
 	@Override
 	public BaseResponseVo getCalculationData(PromotionApplyRequestVo reqVo) {
 		List<CouponProductsVo> cpList = getAvailablePromotionData(reqVo);
-		log.info("couponProducts List : " + cpList.toString());
 		List<CouponProductsVo> calculateList = calculateDcAmt(cpList);
 		calculateMaxYn(calculateList);
 		return CartCouponResponseVo.builder()
