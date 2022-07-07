@@ -1,6 +1,6 @@
 package com.plateer.ec1.promotion.vo.base;
 
-import com.plateer.ec1.promotion.vo.common.Product;
+import com.plateer.ec1.common.vo.Product;
 import lombok.Data;
 
 import java.util.List;

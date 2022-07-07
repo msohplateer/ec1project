@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper
+3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.plateer.ec1.promotion.mapper.ApplyInfoMapper">
+    <resultMap id="prdCupMap" type="com.plateer.ec1.promotion.vo.apply.ProductCouponsVo">
+        <id column="goods_no"/>
+        <id column="item_no"/>
+        <association property="product" autoMapping="true"/>
+        <collection property="couponApplyInfoList" autoMapping="true" ofType="com.plateer.ec1.promotion.vo.apply.CouponApplyInfo"/>
+    </resultMap>
+
+    <resultMap id="cartCupMap" type="com.plateer.ec1.promotion.vo.apply.CouponProductsVo">
+        <id column="prm_no"/>
+        <id column="cpn_kind_cd"/>
+        <id column="dc_ccd"/>
+        <id column="dc_val"/>
+        <id column="min_pur_amt"/>
+        <id column="max_dc_amt"/>
+        <id column="degr_ccd"/>
+        <id column="cpn_iss_no"/>
+        <id column="org_apply_yn"/>
+        <association property="couponApplyInfo" autoMapping="true"/>
+        <collection property="productList" autoMapping="true" ofType="com.plateer.ec1.common.vo.Product"/>
+    </resultMap>
+
+
+    <sql id="sql_prmInfo">
+        with prm_info as (
+                select cpb.prm_no
+                     , cpb.prm_nm
+                     , cpb.dc_ccd
+                     , cpb.dc_val
+                     , cpb.min_pur_amt
+                     , cpb.max_dc_amt
+                     , ccb.cpn_kind_cd
+                     , ccb.degr_ccd
+                     , cci.cpn_iss_no
+                     , cci.mbr_no
+                     , pgb.goods_no
+                     , pii.item_no
+                  from cc_prm_base cpb
+                 inner join cc_cpn_base ccb
+                    on cpb.prm_no = ccb.prm_no
+                 inner join cc_cpn_issue cci
+                    on ccb.prm_no = cci.prm_no
+                 inner join cc_prm_aply_tgt cpat
+                    on cci.prm_no = cpat.prm_no
+                 inner join pr_goods_base pgb
+                    on cpat.aply_tgt_no = pgb.goods_no
+                 inner join pr_item_info pii
+                    on pgb.goods_no = pii.goods_no
+                 where cpb.use_yn = 'Y'
+                   and cpat.use_yn = 'Y'
+                   and cpat.use_yn = 'Y'
+                   and cci.cpn_use_dt is null
+                   and pgb.prgs_stat_cd = '20'
+                   and (cpb.prm_priod_ccd = '10' and now() between cpb.prm_strt_dt and cpb.prm_end_dt + interval '1 day')
+                       or (cpb.prm_priod_ccd = '20' and now() between cci.sys_mod_dtime and cci.sys_mod_dtime + cpb.prm_std_dd * interval '1 day')
+        )
+    </sql>
+
+    <sql id="sql_applyInfo">
+        <include refid="sql_prmInfo"/>
+        ,goods_info as(
+        <foreach collection="productList" item="product" separator="union all">
+            select #{product.goodsNo} as goods_no
+                 , #{product.goodsItemNo} as item_no
+                 , #{product.goodsCnt} as goods_cnt
+                 , #{product.goodsAmt} as goods_amt
+        </foreach>
+        ), apply_info as (
+            select pi.prm_no
+                 , pi.dc_ccd
+                 , pi.dc_val
+                 , pi.min_pur_amt
+                 , pi.max_dc_amt
+                 , pi.cpn_kind_cd
+                 , pi.degr_ccd
+                 , pi.cpn_iss_no
+                 , pi.mbr_no
+                 , pi.goods_no
+                 , pi.item_no
+                 , case when pi.cpn_kind_cd = '30' then gi.goods_amt * gi.goods_cnt
+                        else gi.goods_amt end as goods_amt
+              from prm_info pi
+             inner join goods_info gi
+                on pi.goods_no = gi.goods_no
+               and pi.item_no = gi.item_no
+        )
+    </sql>
+
+    <select id="getProductCouponsInfo" parameterType="com.plateer.ec1.promotion.vo.apply.PromotionApplyRequestVo" resultMap="prdCupMap">
+        <include refid="sql_applyInfo"></include>
+        select *
+          from apply_info
+         where cpn_kind_cd = #{cpnKindCd}
+           and mbr_no = #{mbrNo}
+         order by goods_amt desc;
+    </select>
+
+    <select id="getCouponProductsInfo" parameterType="com.plateer.ec1.promotion.vo.apply.PromotionApplyRequestVo" resultMap="cartCupMap">
+        <include refid="sql_applyInfo"></include>
+        select *
+          from apply_info
+         where cpn_kind_cd = #{cpnKindCd}
+           and mbr_no = #{mbrNo};
+    </select>
+</mapper>
