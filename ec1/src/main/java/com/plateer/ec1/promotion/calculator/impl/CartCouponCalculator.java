@@ -6,7 +6,10 @@ import com.plateer.ec1.promotion.enums.Prm0003Code;
 import com.plateer.ec1.promotion.enums.Prm0004Code;
 import com.plateer.ec1.promotion.enums.PromotionType;
 import com.plateer.ec1.promotion.mapper.ApplyInfoMapper;
-import com.plateer.ec1.promotion.vo.apply.*;
+import com.plateer.ec1.promotion.vo.apply.CartCouponResponseVo;
+import com.plateer.ec1.promotion.vo.apply.CouponApplyInfo;
+import com.plateer.ec1.promotion.vo.apply.CouponProductsVo;
+import com.plateer.ec1.promotion.vo.apply.PromotionApplyRequestVo;
 import com.plateer.ec1.promotion.vo.base.BaseResponseVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -51,19 +53,6 @@ public class CartCouponCalculator implements Calculator{
 				.orElse(CouponApplyInfo.builder().build() );
 		caInfo.setMaxBenefitYn("Y");
 	}
-
-	private CouponApplyInfo getMaxPrm(List<CouponApplyInfo> paList, Set<Long> maxBnfSet) {
-		log.info("List Data : " + paList.toString());
-		CouponApplyInfo vo = paList.stream()
-				.filter(data -> !maxBnfSet.contains(data.getCpnIssNo()) && data.getDcAmt() > 0)
-				.max(Comparator.comparing(CouponApplyInfo::getDcAmt)
-						.thenComparing(CouponApplyInfo::getPrmNo).reversed()
-						.thenComparing(CouponApplyInfo::getCpnIssNo).reversed())
-				.orElse(CouponApplyInfo.builder().build() );
-		return vo;
-	}
-
-
 
 	private List<CouponProductsVo> calculateDcAmt(List<CouponProductsVo> cpList) {
 		// 할인금액 계산
