@@ -1,7 +1,5 @@
 package com.plateer.ec1.util;
 
-import com.plateer.ec1.payment.vo.InicisGetVrAcctNoReqVo;
-import com.plateer.ec1.payment.vo.InicisGetVrAcctNoResVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -17,7 +15,7 @@ import java.net.URI;
 @Slf4j
 public class ConnectionUtil {
 
-    public InicisGetVrAcctNoResVo getInicisVrAcctNoHttpRequest(String url, String path, InicisGetVrAcctNoReqVo reqVo){
+    public static <T> String httpRequest(String url, String path, T o){
         URI uri = UriComponentsBuilder
                 .fromUriString(url)
                 .path(path)
@@ -25,7 +23,7 @@ public class ConnectionUtil {
                 .build()
                 .toUri();
 
-        MultiValueMap mvMap = ConvertUtil.convertVoToMap(reqVo);
+        MultiValueMap mvMap = ConvertUtil.convertVoToMap(o);
 
         RequestEntity requestEntity = RequestEntity
                 .post(uri)
@@ -34,7 +32,6 @@ public class ConnectionUtil {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
-        InicisGetVrAcctNoResVo resVo = ConvertUtil.convertJsonToVo(response.getBody(), InicisGetVrAcctNoResVo.class);
-        return resVo;
+        return response.getBody();
     }
 }

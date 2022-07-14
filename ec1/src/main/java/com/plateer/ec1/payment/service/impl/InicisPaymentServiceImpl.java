@@ -6,6 +6,7 @@ import com.plateer.ec1.payment.mapper.PaymentTrxMapper;
 import com.plateer.ec1.payment.service.PaymentService;
 import com.plateer.ec1.payment.vo.*;
 import com.plateer.ec1.util.ConnectionUtil;
+import com.plateer.ec1.util.ConvertUtil;
 import com.plateer.ec1.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @RequiredArgsConstructor
 public class InicisPaymentServiceImpl implements PaymentService{
-	private final ConnectionUtil connectionUtil;
+	//private final ConnectionUtil connectionUtil;
 	private final PaymentTrxMapper paymentTrxMapper;
 
 
@@ -52,7 +53,8 @@ public class InicisPaymentServiceImpl implements PaymentService{
 
 	private InicisGetVrAcctNoResVo requestApprove(PayInfoVo payInfoVo, OrderInfoVo orderInfoVo) throws Exception{
 		InicisGetVrAcctNoReqVo reqVo = getPaymentRequestData(payInfoVo, orderInfoVo);
-		InicisGetVrAcctNoResVo resVo = connectionUtil.getInicisVrAcctNoHttpRequest(InicisData.URL.getCode(), InicisData.GET_NO_PATH.getCode(), reqVo);
+		String resData = ConnectionUtil.httpRequest(InicisData.URL.getCode(), InicisData.GET_NO_PATH.getCode(), reqVo);
+		InicisGetVrAcctNoResVo resVo = ConvertUtil.convertJsonToVo(resData, InicisGetVrAcctNoResVo.class);
 		return resVo;
 	}
 
