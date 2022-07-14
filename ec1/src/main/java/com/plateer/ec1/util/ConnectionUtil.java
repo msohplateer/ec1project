@@ -1,6 +1,5 @@
 package com.plateer.ec1.util;
 
-import com.plateer.ec1.payment.vo.InicisDepositReqVo;
 import com.plateer.ec1.payment.vo.InicisGetVrAcctNoReqVo;
 import com.plateer.ec1.payment.vo.InicisGetVrAcctNoResVo;
 import lombok.extern.slf4j.Slf4j;
@@ -37,26 +36,5 @@ public class ConnectionUtil {
         ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
         InicisGetVrAcctNoResVo resVo = ConvertUtil.convertJsonToVo(response.getBody(), InicisGetVrAcctNoResVo.class);
         return resVo;
-    }
-
-    public String notifyDepositCompleteHttpRequest(String url, String path, InicisDepositReqVo reqVo){
-        URI uri = UriComponentsBuilder
-                .fromUriString(url)
-                .path(path)
-                .encode()
-                .build()
-                .toUri();
-
-        MultiValueMap mvMap = ConvertUtil.convertVoToMap(reqVo);
-
-        RequestEntity requestEntity = RequestEntity
-                .post(uri)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(mvMap);
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
-        //InicisGetVrAcctNoResVo resVo = ConvertUtil.convertJsonToVo(response.getBody(), InicisGetVrAcctNoResVo.class);
-        return response.getBody();
     }
 }
