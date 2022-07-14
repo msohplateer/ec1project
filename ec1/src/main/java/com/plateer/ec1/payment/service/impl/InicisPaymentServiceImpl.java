@@ -53,7 +53,6 @@ public class InicisPaymentServiceImpl implements PaymentService{
 	private InicisGetVrAcctNoResVo requestApprove(PayInfoVo payInfoVo, OrderInfoVo orderInfoVo) throws Exception{
 		InicisGetVrAcctNoReqVo reqVo = getPaymentRequestData(payInfoVo, orderInfoVo);
 		InicisGetVrAcctNoResVo resVo = connectionUtil.getInicisVrAcctNoHttpRequest(InicisData.URL.getCode(), InicisData.GET_NO_PATH.getCode(), reqVo);
-		log.info("inicis response data : " + resVo.toString());
 		return resVo;
 	}
 

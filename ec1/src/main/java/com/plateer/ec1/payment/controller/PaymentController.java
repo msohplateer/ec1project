@@ -1,5 +1,6 @@
 package com.plateer.ec1.payment.controller;
 
+import com.plateer.ec1.payment.vo.OrderInfoVo;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +23,8 @@ public class PaymentController {
 	private final PayService payService;
 	
 	@PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, value = "/approve")
-	public PayApproveResVo approvePayment(@RequestBody PayInfoVo piVo) {
-		log.info("Payment Controller ApprovePayment call : {}", piVo);
-		return null;
+	public PayApproveResVo approvePayment(@RequestBody PayInfoVo piVo, OrderInfoVo oiVo) throws Exception {
+		return payService.approvePayment(piVo, oiVo);
 	}
 
 	/*
