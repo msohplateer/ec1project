@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper
 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.plateer.ec1.promotion.mapper.ApplyInfoMapper">
+<mapper namespace="com.plateer.ec1.promotion.mapper.PromotionApplyMapper">
     <resultMap id="prdCupMap" type="com.plateer.ec1.promotion.vo.apply.ProductCouponsVo">
         <id column="goods_no"/>
         <id column="item_no"/>
@@ -68,6 +68,7 @@
                  , #{product.goodsItemNo} as item_no
                  , #{product.goodsCnt} as goods_cnt
                  , #{product.goodsAmt} as goods_amt
+                 , #{product.cpnIssNo} as cpn_iss_no
         </foreach>
         ), apply_info as (
             select pi.prm_no
@@ -83,6 +84,8 @@
                  , pi.item_no
                  , case when pi.cpn_kind_cd = '30' then gi.goods_amt * gi.goods_cnt
                         else gi.goods_amt end as goods_amt
+                 , case when pi.cpn_iss_no = gi.cpn_iss_no then 'Y'
+                        else 'N' end as org_apply_yn
               from prm_info pi
              inner join goods_info gi
                 on pi.goods_no = gi.goods_no
@@ -96,7 +99,7 @@
           from apply_info
          where cpn_kind_cd = #{cpnKindCd}
            and mbr_no = #{mbrNo}
-         order by goods_amt desc;
+         order by org_apply_yn desc, goods_amt desc;
     </select>
 
     <select id="getCouponProductsInfo" parameterType="com.plateer.ec1.promotion.vo.apply.PromotionApplyRequestVo" resultMap="cartCupMap">

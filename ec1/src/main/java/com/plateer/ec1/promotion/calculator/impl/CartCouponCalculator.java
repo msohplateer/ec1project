@@ -5,7 +5,7 @@ import com.plateer.ec1.promotion.calculator.Calculator;
 import com.plateer.ec1.promotion.enums.Prm0003Code;
 import com.plateer.ec1.promotion.enums.Prm0004Code;
 import com.plateer.ec1.promotion.enums.PromotionType;
-import com.plateer.ec1.promotion.mapper.ApplyInfoMapper;
+import com.plateer.ec1.promotion.mapper.PromotionApplyMapper;
 import com.plateer.ec1.promotion.vo.apply.CartCouponResponseVo;
 import com.plateer.ec1.promotion.vo.apply.CouponApplyInfo;
 import com.plateer.ec1.promotion.vo.apply.CouponProductsVo;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CartCouponCalculator implements Calculator{
 
-	private final ApplyInfoMapper aiMapper;
+	private final PromotionApplyMapper aiMapper;
 	@Override
 	public PromotionType getType() {
 		return PromotionType.CART_CUP;

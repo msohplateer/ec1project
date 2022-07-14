@@ -4,7 +4,7 @@ import com.plateer.ec1.common.vo.Product;
 import com.plateer.ec1.promotion.calculator.Calculator;
 import com.plateer.ec1.promotion.enums.Prm0004Code;
 import com.plateer.ec1.promotion.enums.PromotionType;
-import com.plateer.ec1.promotion.mapper.ApplyInfoMapper;
+import com.plateer.ec1.promotion.mapper.PromotionApplyMapper;
 import com.plateer.ec1.promotion.vo.apply.CouponApplyInfo;
 import com.plateer.ec1.promotion.vo.apply.ProductCouponResponseVo;
 import com.plateer.ec1.promotion.vo.apply.ProductCouponsVo;
@@ -24,7 +24,7 @@ import java.util.Set;
 @Slf4j
 public class ProductCouponCalculator implements Calculator{
 
-	private final ApplyInfoMapper aiMapper;
+	private final PromotionApplyMapper aiMapper;
 
 	@Override
 	public PromotionType getType() {
@@ -34,6 +34,7 @@ public class ProductCouponCalculator implements Calculator{
 	@Override
 	public BaseResponseVo getCalculationData(PromotionApplyRequestVo reqVo) {
 		List<ProductCouponsVo> applyList = getAvailableProductCouponData(reqVo);
+		log.info("applyList : " + applyList.toString());
 		List<ProductCouponsVo> calculateList = calculateData(applyList);
 		calculateMaxYn(calculateList);
 		return ProductCouponResponseVo.builder()
@@ -74,7 +75,8 @@ public class ProductCouponCalculator implements Calculator{
 		log.info("List Data : " + paList.toString());
 		CouponApplyInfo vo = paList.stream()
 				.filter(data -> !maxBnfSet.contains(data.getCpnIssNo()) && data.getDcAmt() > 0)
-						.max(Comparator.comparing(CouponApplyInfo::getDcAmt)
+						.max(Comparator.comparing(CouponApplyInfo::getOrgApplyYn)
+										.thenComparing(CouponApplyInfo::getDcAmt)
 										.thenComparing(CouponApplyInfo::getPrmNo).reversed()
 										.thenComparing(CouponApplyInfo::getCpnIssNo).reversed())
 				.orElse(CouponApplyInfo.builder().build() );

@@ -1,8 +1,8 @@
 package com.plateer.ec1.promotion.coupon.service.impl;
 
-import com.plateer.ec1.common.model.promotion.CcCpnIssueModel;
-import com.plateer.ec1.promotion.mapper.CouponDownloadTrxMapper;
-import com.plateer.ec1.promotion.mapper.CouponInfoMapper;
+import com.plateer.ec1.common.model.promotion.CcCpnIssue;
+import com.plateer.ec1.promotion.mapper.CouponTrxMapper;
+import com.plateer.ec1.promotion.mapper.CouponMapper;
 import com.plateer.ec1.promotion.validator.CouponValidator;
 import com.plateer.ec1.promotion.vo.coupon.Coupon;
 import com.plateer.ec1.promotion.vo.coupon.CouponRequestVo;
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class CouponCancelServiceImpl {
 
     private final CouponValidator validator;
-    private final CouponInfoMapper ciMapper;
-    private final CouponDownloadTrxMapper cdtMapper;
+    private final CouponMapper ciMapper;
+    private final CouponTrxMapper cdtMapper;
 
     public void cancelCoupon(CouponRequestVo vo) throws Exception{
         checkRestoreCoupon(vo);
-        CcCpnIssueModel model = CcCpnIssueModel.builder()
+        CcCpnIssue model = CcCpnIssue.builder()
                 .prmNo(vo.getPrmNo())
                 .mbrNo(vo.getMbrNo())
                 .orgCpnIssNo(vo.getCpnIssNo())

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface ApplyInfoMapper {
+public interface PromotionApplyMapper {
     List<ProductCouponsVo> getProductCouponsInfo(PromotionApplyRequestVo vo);
 
     List<CouponProductsVo> getCouponProductsInfo(PromotionApplyRequestVo vo);

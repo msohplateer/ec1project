@@ -1,7 +1,5 @@
 package com.plateer.ec1.order.context;
 
-import java.util.Arrays;
-
 import com.plateer.ec1.order.repository.OrderRepository;
 import com.plateer.ec1.order.service.OrderHistoryService;
 import com.plateer.ec1.order.strategy.after.AfterStrategy;
@@ -12,6 +10,8 @@ import com.plateer.ec1.order.vo.OrderRequest;
 import com.plateer.ec1.order.vo.OrderValidationVo;
 import com.plateer.ec1.order.vo.OrderVo;
 import com.plateer.ec1.payment.service.PayService;
+
+import java.util.Arrays;
 
 public class OrderContext {
 	private OrderHistoryService orderHistoryService;
@@ -38,7 +38,7 @@ public class OrderContext {
 		insertOrderData(Vo);
 		
 		// 결제 처리
-		payService.approvePayment(request.getPaymentInfo());
+		//payService.approvePayment(request.getPayInfoVo());
 		
 		// 금액 검증
 		amountValidation(request.getOrderNo());

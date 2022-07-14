@@ -1,5 +1,6 @@
 package com.plateer.ec1.common.model.promotion;
 
+import com.plateer.ec1.common.model.BaseModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @AllArgsConstructor
-public class CcCpnIssueModel {
+public class CcCpnIssue extends BaseModel {
     private Long prmNo;
     private Long cpnIssNo;
     private String mbrNo;
@@ -19,8 +20,4 @@ public class CcCpnIssueModel {
     private Long orgCpnIssNo;
     private String cpnCertNo;
     private String ordNo;
-    private LocalDateTime sysRegDtime;
-    private String sysRegId;
-    private LocalDateTime sysModDtime;
-    private String sysModrId;
 }

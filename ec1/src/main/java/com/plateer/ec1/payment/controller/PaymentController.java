@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plateer.ec1.payment.service.PayService;
-import com.plateer.ec1.payment.vo.ApproveResponseVo;
-import com.plateer.ec1.payment.vo.CancelRequestVo;
-import com.plateer.ec1.payment.vo.NetCancelRequestVo;
-import com.plateer.ec1.payment.vo.PaymentInfo;
+import com.plateer.ec1.payment.vo.PayApproveResVo;
+import com.plateer.ec1.payment.vo.PayInfoVo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +22,12 @@ public class PaymentController {
 	private final PayService payService;
 	
 	@PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, value = "/approve")
-	public ApproveResponseVo approvePayment(@RequestBody PaymentInfo piVo) {
+	public PayApproveResVo approvePayment(@RequestBody PayInfoVo piVo) {
 		log.info("Payment Controller ApprovePayment call : {}", piVo);
-		return payService.approvePayment(piVo);
+		return null;
 	}
-	
+
+	/*
 	@PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE}, value = "/cancel")
 	public void cancelPayment(@RequestBody CancelRequestVo crVo) {
 		log.info("Payment Controller cancelPayment call : {}", crVo);
@@ -40,4 +39,5 @@ public class PaymentController {
 		log.info("Payment Controller netCancelPayment call : {}", ncrVo);
 		payService.netCancelPayment(ncrVo, ncrVo.getPaymentType());
 	}
+	 */
 }
